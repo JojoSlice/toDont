@@ -21,6 +21,7 @@ app.db
 # === Rider / IntelliJ ===
 .idea/
 *.iml
+*.rider.project.*
 
 # === Visual Studio / VSCode ===
 .vs/
@@ -40,14 +41,12 @@ project.assets.json
 Thumbs.db
 
 # === Static web assets ===
+# Ignorera endast genererade webassets — behåll wwwroot för egna filer
 *.staticwebassets.*
-wwwroot/
+!wwwroot/**
 
 # === Publish / temp ===
 publish/
 *.Publish.xml
 *.pubxml
 *.pubxml.user
-
-# === Rider restore-info ===
-*.rider.project.*
