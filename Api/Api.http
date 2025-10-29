@@ -1,0 +1,10 @@
+### 
+
+@Api_HostAddress = http://localhost:5185
+
+# // GET {{Api_HostAddress}}/endpoint/
+
+GET Accept: application/json HTTP/1.1
+
+
+### 
