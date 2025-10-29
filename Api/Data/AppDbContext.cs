@@ -9,5 +9,6 @@ namespace Data
             : base(options) { }
 
         public DbSet<ToDont> toDont { get; set; }
+        public DbSet<User> User { get; set; }
     }
 }
