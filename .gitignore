@@ -1,0 +1,53 @@
+# === .NET / C# standard ===
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# === Build artifacts ===
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.db-shm
+*.db-wal
+
+# === Databas (SQLite) ===
+app.db
+
+# === Rider / IntelliJ ===
+.idea/
+*.iml
+
+# === Visual Studio / VSCode ===
+.vs/
+.vscode/
+*.csproj.user
+
+# === NuGet artifacts ===
+*.nupkg
+*.snupkg
+project.lock.json
+project.assets.json
+*.nuget.props
+*.nuget.targets
+
+# === OS-specifika ===
+.DS_Store
+Thumbs.db
+
+# === Static web assets ===
+*.staticwebassets.*
+wwwroot/
+
+# === Publish / temp ===
+publish/
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+
+# === Rider restore-info ===
+*.rider.project.*
