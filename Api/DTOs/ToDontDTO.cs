@@ -16,13 +16,12 @@ namespace Api.Dtos
         public required bool IsActive { get; init; }
     }
 
-    public record ToDontResponseDto
-    {
-        public required int Id { get; init; }
-
-        [Required]
-        public required string Title { get; init; }
-
-        public required bool IsActive { get; init; }
-    }
+    public record ToDontResponseDto(
+        int Id,
+        string Title,
+        bool IsActive,
+        DateTime CreatedAt,
+        DateTime UpdatedAt,
+        int ImageCount
+    );
 }
