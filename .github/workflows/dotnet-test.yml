@@ -28,12 +28,12 @@ jobs:
         dotnet-version: '9.0.x'
     
     - name: Restore dependencies
-      if: inputs.test_type == 'Build and restore' || inputs.test_type == 'Full test'
+      if: inputs.test_type != 'Check dependencies'
       run: dotnet restore ./Api/Api.csproj
       
     - name: Build
       if: inputs.test_type != 'Check dependencies'
-      run: dotnet build ./Api/Api.csproj --configuration Release
+      run: dotnet build ./Api/Api.csproj --configuration Release --no-restore
       
     - name: Check packages
       if: inputs.test_type == 'Check dependencies'
