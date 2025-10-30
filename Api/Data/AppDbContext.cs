@@ -10,5 +10,6 @@ namespace Data
 
         public DbSet<ToDont> toDont { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Image> image { get; set; }
     }
 }
