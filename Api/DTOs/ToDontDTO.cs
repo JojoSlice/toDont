@@ -1,20 +1,28 @@
-namespace Dtos
+using System.ComponentModel.DataAnnotations;
+
+namespace Api.Dtos
 {
-    public class CreateToDontDto
+    public record CreateToDontDto
     {
-        public string Title { get; set; }
+        [Required]
+        public required string Title { get; init; }
     }
 
-    public class UpdateToDontDto
+    public record UpdateToDontDto
     {
-        public string Title { get; set; }
-        public bool IsActive { get; set; }
+        [Required]
+        public required string Title { get; init; }
+
+        public required bool IsActive { get; init; }
     }
 
-    public class ToDontResponseDto
+    public record ToDontResponseDto
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public bool IsActive { get; set; }
+        public required int Id { get; init; }
+
+        [Required]
+        public required string Title { get; init; }
+
+        public required bool IsActive { get; init; }
     }
 }
