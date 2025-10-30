@@ -1,15 +1,12 @@
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data
+namespace Api.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options) { }
-
-        public DbSet<ToDont> ToDont { get; set; }
-        public DbSet<User> User { get; set; }
-        public DbSet<Image> Image { get; set; }
+        public DbSet<ToDont> ToDonts { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }
