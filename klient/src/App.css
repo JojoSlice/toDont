@@ -40,3 +40,37 @@
 .read-the-docs {
   color: #888;
 }
+
+/* --- ToDon’t layout styles --- */
+main {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #1d221c;
+  color: #e6e6e6;
+  font-family: system-ui, sans-serif;
+}
+
+h1 {
+  color: #c6ff00;
+  margin-bottom: 1rem;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.todont {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1b2019;
+  color: #e6e6e6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* --- End ToDon’t layout styles --- */
+
