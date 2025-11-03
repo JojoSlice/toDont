@@ -3,8 +3,8 @@ name: Build React Client on PR
 on:
   pull_request:
     paths:
-      - "klient/**"
-      - "!klient/README.md"
+      - "Client/**"
+      - "!Client/README.md"
     branches:
       - main
       - develop
@@ -29,22 +29,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Räkna ändrade filer och rader
+      - name: Count changed files and lines
         id: stats
         shell: bash
         run: |
           git fetch origin ${{ github.base_ref }}
 
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^klient/' | wc -l)
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '^Client/' | wc -l)
           echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
 
-          CHANGED_LINES=$(git diff --numstat origin/${{ github.base_ref }}...HEAD | grep '^.*klient/' | awk '{sum+=$1+$2} END {print sum}')
+          CHANGED_LINES=$(git diff --numstat origin/${{ github.base_ref }}...HEAD | grep '^.*Client/' | awk '{sum+=$1+$2} END {print sum}')
           echo "changed_lines=${CHANGED_LINES:-0}" >> $GITHUB_OUTPUT
 
           TS_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(ts|tsx)$' | wc -l)
           echo "ts_files=$TS_FILES" >> $GITHUB_OUTPUT
 
-      - name: Visa statistik
+      - name: Show stats
         shell: bash
         run: |
           echo "📊 Statistik för React-projektet:"
@@ -59,32 +59,32 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: klient/package-lock.json
+          cache-dependency-path: Client/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./klient
+        working-directory: ./Client
         run: npm ci
 
       - name: Run ESLint
-        working-directory: ./klient
+        working-directory: ./Client
         run: npm run lint
 
       - name: Run TypeScript type check
-        working-directory: ./klient
+        working-directory: ./Client
         run: npx tsc -b --noEmit
 
       - name: Build project
-        working-directory: ./klient
+        working-directory: ./Client
         run: npm run build
 
-      - name: Byggresultat
+      - name: Build result
         if: success()
         shell: bash
         run: |
           echo "✅ Build lyckades på ${{ matrix.os }}!"
           echo "Ändrade ${{ steps.stats.outputs.changed_files }} filer med ${{ steps.stats.outputs.changed_lines }} rader"
 
-      - name: Kommentera på PR
+      - name: Comment PR
         if: success() && matrix.os == 'ubuntu-latest'
         uses: actions/github-script@v7
         with:
