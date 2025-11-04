@@ -1,12 +1,13 @@
 using Api.Dtos;
 using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController(IUserService userService) : ControllerBase
+    public class UserController(IUserService userService, IJwtService jwtService) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<ActionResult<LoginResponseDto>> Register(CreateUserDto request)
@@ -15,7 +16,7 @@ namespace Api.Controllers
             {
                 var user = await userService.CreateUserAsync(request.UserName, request.Password);
 
-                var token = "en jwt token kommer härl";
+                var token = jwtService.GenerateToken(user);
 
                 return new LoginResponseDto(token, user.Id, user.UserName);
             }
@@ -25,7 +26,6 @@ namespace Api.Controllers
             }
         }
 
-        // TODO auth
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDto>> Login(LoginDto request)
         {
@@ -34,12 +34,12 @@ namespace Api.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var token = "en jwt token kommer härl";
+            var token = jwtService.GenerateToken(user);
 
             return new LoginResponseDto(token, user.Id, user.UserName);
         }
 
-        // TODO auth
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponseDto>> GetUserById(int id)
         {
@@ -51,7 +51,7 @@ namespace Api.Controllers
             return new UserResponseDto(user.Id, user.UserName, user.ToDonts.Count);
         }
 
-        // TODO auth
+        [Authorize]
         [HttpGet("profile/{username}")]
         public async Task<ActionResult<UserResponseDto>> GetUserProfile(string username)
         {

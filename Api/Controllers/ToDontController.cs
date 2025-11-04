@@ -1,18 +1,20 @@
 using Api.Dtos;
 using Api.Models;
 using Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ToDontController(IToDontService toDontService) : ControllerBase
     {
-        // TODO auth - userId should come from authenticated user
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDontResponseDto>>> GetAllToDoNts([FromQuery] int userId)
+        public async Task<ActionResult<IEnumerable<ToDontResponseDto>>> GetAllToDoNts()
         {
+            var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
             var toDonts = await toDontService.GetAllByUserIdAsync(userId);
 
             var response = toDonts.Select(t => new ToDontResponseDto(
@@ -27,10 +29,10 @@ namespace Api.Controllers
             return Ok(response);
         }
 
-        // TODO auth - userId should come from authenticated user
         [HttpGet("{id}")]
-        public async Task<ActionResult<ToDontResponseDto>> GetToDontById(int id, [FromQuery] int userId)
+        public async Task<ActionResult<ToDontResponseDto>> GetToDontById(int id)
         {
+            var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
             var toDont = await toDontService.GetByIdAsync(id, userId);
 
             if (toDont == null)
@@ -46,13 +48,11 @@ namespace Api.Controllers
             );
         }
 
-        // TODO auth - userId should come from authenticated user
         [HttpPost]
-        public async Task<ActionResult<ToDontResponseDto>> CreateToDont(
-            [FromBody] CreateToDontDto request,
-            [FromQuery] int userId
-        )
+        public async Task<ActionResult<ToDontResponseDto>> CreateToDont([FromBody] CreateToDontDto request)
         {
+            var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
+
             var toDont = new ToDont
             {
                 Title = request.Title,
@@ -73,19 +73,15 @@ namespace Api.Controllers
 
             return CreatedAtAction(
                 nameof(GetToDontById),
-                new { id = created.Id, userId },
+                new { id = created.Id },
                 response
             );
         }
 
-        // TODO auth - userId should come from authenticated user
         [HttpPut("{id}")]
-        public async Task<ActionResult<ToDontResponseDto>> UpdateToDont(
-            int id,
-            [FromBody] UpdateToDontDto request,
-            [FromQuery] int userId
-        )
+        public async Task<ActionResult<ToDontResponseDto>> UpdateToDont(int id, [FromBody] UpdateToDontDto request)
         {
+            var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
             var toDont = new ToDont { Title = request.Title, IsActive = request.IsActive };
 
             var updated = await toDontService.UpdateAsync(id, userId, toDont);
@@ -103,10 +99,10 @@ namespace Api.Controllers
             );
         }
 
-        // TODO auth - userId should come from authenticated user
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteToDont(int id, [FromQuery] int userId)
+        public async Task<ActionResult> DeleteToDont(int id)
         {
+            var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
             var success = await toDontService.DeleteAsync(id, userId);
 
             if (!success)
@@ -115,10 +111,10 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        // TODO auth - userId should come from authenticated user
         [HttpPatch("{id}/toggle")]
-        public async Task<ActionResult> ToggleToDont(int id, [FromQuery] int userId)
+        public async Task<ActionResult> ToggleToDont(int id)
         {
+            var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
             var success = await toDontService.ToggleActiveAsync(id, userId);
 
             if (!success)
