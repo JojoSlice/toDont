@@ -102,20 +102,22 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         Assert.Equal("Test ToDont", result.Title);
     }
 
-    [Fact]
-    public async Task GetByIdAsync_WithInvalidId_ShouldReturnNull()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task GetByIdAsync_WithInvalidId_ShouldReturnNull(int invalidId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
-        var result = await service.GetByIdAsync(999, user.Id);
+        var result = await service.GetByIdAsync(invalidId, user.Id);
 
         Assert.Null(result);
     }
 
-    [Fact]
-    public async Task GetByIdAsync_WithWrongUserId_ShouldReturnNull()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task GetByIdAsync_WithWrongUserId_ShouldReturnNull(int wrongUserId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
@@ -129,7 +131,7 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         };
         var created = await service.CreateAsync(toDont);
 
-        var result = await service.GetByIdAsync(created.Id, 999);
+        var result = await service.GetByIdAsync(created.Id, wrongUserId);
 
         Assert.Null(result);
     }
@@ -159,8 +161,9 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         Assert.True(result.UpdatedAt > result.CreatedAt);
     }
 
-    [Fact]
-    public async Task UpdateAsync_WithInvalidId_ShouldReturnNull()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task UpdateAsync_WithInvalidId_ShouldReturnNull(int invalidId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
@@ -168,13 +171,14 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
 
         var updatedToDont = new ToDont { Title = "Updated Title", IsActive = false };
 
-        var result = await service.UpdateAsync(999, user.Id, updatedToDont);
+        var result = await service.UpdateAsync(invalidId, user.Id, updatedToDont);
 
         Assert.Null(result);
     }
 
-    [Fact]
-    public async Task UpdateAsync_WithWrongUserId_ShouldReturnNull()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task UpdateAsync_WithWrongUserId_ShouldReturnNull(int wrongUserId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
@@ -190,7 +194,7 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
 
         var updatedToDont = new ToDont { Title = "Updated Title", IsActive = false };
 
-        var result = await service.UpdateAsync(created.Id, 999, updatedToDont);
+        var result = await service.UpdateAsync(created.Id, wrongUserId, updatedToDont);
 
         Assert.Null(result);
     }
@@ -221,20 +225,22 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         Assert.Null(toDontInDb);
     }
 
-    [Fact]
-    public async Task DeleteAsync_WithInvalidId_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task DeleteAsync_WithInvalidId_ShouldReturnFalse(int invalidId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
-        var result = await service.DeleteAsync(999, user.Id);
+        var result = await service.DeleteAsync(invalidId, user.Id);
 
         Assert.False(result);
     }
 
-    [Fact]
-    public async Task DeleteAsync_WithWrongUserId_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task DeleteAsync_WithWrongUserId_ShouldReturnFalse(int wrongUserId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
@@ -248,7 +254,7 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         };
         var created = await service.CreateAsync(toDont);
 
-        var result = await service.DeleteAsync(created.Id, 999);
+        var result = await service.DeleteAsync(created.Id, wrongUserId);
 
         Assert.False(result);
     }
@@ -290,20 +296,22 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         Assert.True(toDontInDb2.IsActive);
     }
 
-    [Fact]
-    public async Task ToggleActiveAsync_WithInvalidId_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task ToggleActiveAsync_WithInvalidId_ShouldReturnFalse(int invalidId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
-        var result = await service.ToggleActiveAsync(999, user.Id);
+        var result = await service.ToggleActiveAsync(invalidId, user.Id);
 
         Assert.False(result);
     }
 
-    [Fact]
-    public async Task ToggleActiveAsync_WithWrongUserId_ShouldReturnFalse()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task ToggleActiveAsync_WithWrongUserId_ShouldReturnFalse(int wrongUserId)
     {
         using var context = _fixture.CreateContext();
         var user = await _fixture.CreateTestUserAsync(context);
@@ -317,7 +325,7 @@ public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<Servi
         };
         var created = await service.CreateAsync(toDont);
 
-        var result = await service.ToggleActiveAsync(created.Id, 999);
+        var result = await service.ToggleActiveAsync(created.Id, wrongUserId);
 
         Assert.False(result);
     }

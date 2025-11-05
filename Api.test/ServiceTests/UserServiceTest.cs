@@ -97,13 +97,14 @@ public class UserServiceTest(ServiceTestFixture fixture) : IClassFixture<Service
         Assert.Equal(userInDb, result);
     }
 
-    [Fact]
-    public async Task GetUserByIdAsync_WithInvalidData_ShouldReturnNull()
+    [Theory]
+    [ClassData(typeof(InvalidIdsTestData))]
+    public async Task GetUserByIdAsync_WithInvalidData_ShouldReturnNull(int invalidId)
     {
         using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
-        var result = await service.GetUserByIdAsync(123);
+        var result = await service.GetUserByIdAsync(invalidId);
 
         Assert.Null(result);
     }
@@ -128,13 +129,14 @@ public class UserServiceTest(ServiceTestFixture fixture) : IClassFixture<Service
         Assert.Equal(userInDb, result);
     }
 
-    [Fact]
-    public async Task GetUserByUserNameAsync_WithInvalidData_ShouldReturnNull()
+    [Theory]
+    [ClassData(typeof(InvalidUserNamesTestData))]
+    public async Task GetUserByUserNameAsync_WithInvalidData_ShouldReturnNull(string invalidUsername)
     {
         using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
-        var result = await service.GetUserByUserNameAsync("testuser");
+        var result = await service.GetUserByUserNameAsync(invalidUsername);
 
         Assert.Null(result);
     }
