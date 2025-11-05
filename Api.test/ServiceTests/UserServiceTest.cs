@@ -1,4 +1,3 @@
-using Api.Data;
 using Api.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -131,7 +130,9 @@ public class UserServiceTest(ServiceTestFixture fixture) : IClassFixture<Service
 
     [Theory]
     [ClassData(typeof(InvalidUserNamesTestData))]
-    public async Task GetUserByUserNameAsync_WithInvalidData_ShouldReturnNull(string invalidUsername)
+    public async Task GetUserByUserNameAsync_WithInvalidData_ShouldReturnNull(
+        string invalidUsername
+    )
     {
         using var context = _fixture.CreateContext();
         var service = new UserService(context);
