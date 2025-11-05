@@ -4,21 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.test.ServiceTests;
 
-public class UserServiceTest
+public class UserServiceTest(ServiceTestFixture fixture) : IClassFixture<ServiceTestFixture>
 {
-    private static AppDbContext CreateInMemoryContext()
-    {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-
-        return new AppDbContext(options);
-    }
+    private readonly ServiceTestFixture _fixture = fixture;
 
     [Fact]
-    public async Task CreateUser_WithValidData_SouldCreateUser()
+    public async Task CreateUser_WithValidData_ShouldCreateUser()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
         var result = await service.CreateUserAsync("testuser", "password123");
@@ -38,7 +31,7 @@ public class UserServiceTest
     [Fact]
     public async Task CreateUserAsync_WithDuplicateUsername_ShouldThrowException()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
         await service.CreateUserAsync("testuser", "password123");
@@ -51,7 +44,7 @@ public class UserServiceTest
     [Fact]
     public async Task AuthenticateAsync_WithValidData_ShouldReturnToken()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
         await service.CreateUserAsync("testuser", "correctPassword");
 
@@ -64,7 +57,7 @@ public class UserServiceTest
     [Fact]
     public async Task AuthenticateAsync_WithWrongPassword_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
         await service.CreateUserAsync("testuser", "correctPassword");
 
@@ -74,9 +67,9 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task AuthenticateAsync_WithUmvalidData_ShouldReturnNull()
+    public async Task AuthenticateAsync_WithInvalidData_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
         var result = await service.AuthenticateAsync("testuser", "wrongPassword");
@@ -87,7 +80,7 @@ public class UserServiceTest
     [Fact]
     public async Task GetUserByIdAsync_WithValidData_ShouldReturnUser()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
         await service.CreateUserAsync("testuser", "correctPassword");
 
@@ -105,9 +98,9 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task GetUserByIdAsync_WithUnValidData_ShouldReturnNull()
+    public async Task GetUserByIdAsync_WithInvalidData_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
         var result = await service.GetUserByIdAsync(123);
@@ -118,7 +111,7 @@ public class UserServiceTest
     [Fact]
     public async Task GetUserByUserNameAsync_WithValidData_ShouldReturnUser()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
         await service.CreateUserAsync("testuser", "correctPassword");
 
@@ -136,9 +129,9 @@ public class UserServiceTest
     }
 
     [Fact]
-    public async Task GetUserByUserNameAsync_WithUnValidData_ShouldReturnNull()
+    public async Task GetUserByUserNameAsync_WithInvalidData_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
+        using var context = _fixture.CreateContext();
         var service = new UserService(context);
 
         var result = await service.GetUserByUserNameAsync("testuser");
