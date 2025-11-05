@@ -1,34 +1,18 @@
-using Api.Data;
 using Api.Models;
 using Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.test.ServiceTests;
 
-public class ToDontServiceTest
+public class ToDontServiceTest(ServiceTestFixture fixture) : IClassFixture<ServiceTestFixture>
 {
-    private static AppDbContext CreateInMemoryContext()
-    {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
-            .Options;
-
-        return new AppDbContext(options);
-    }
-
-    private static async Task<User> CreateTestUserAsync(AppDbContext context)
-    {
-        var user = new User { UserName = "testuser", PasswordHash = "hashedpassword" };
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
-        return user;
-    }
+    private readonly ServiceTestFixture _fixture = fixture;
 
     [Fact]
     public async Task CreateAsync_WithValidData_ShouldCreateToDont()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -55,8 +39,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task GetAllByUserIdAsync_WithValidUserId_ShouldReturnToDonts()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont1 = new ToDont
@@ -86,8 +70,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task GetAllByUserIdAsync_WithUserIdWithNoToDonts_ShouldReturnEmptyList()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var result = await service.GetAllByUserIdAsync(user.Id);
@@ -99,8 +83,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task GetByIdAsync_WithValidData_ShouldReturnToDont()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -121,8 +105,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task GetByIdAsync_WithInvalidId_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var result = await service.GetByIdAsync(999, user.Id);
@@ -133,8 +117,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task GetByIdAsync_WithWrongUserId_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -153,8 +137,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task UpdateAsync_WithValidData_ShouldUpdateToDont()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -178,8 +162,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task UpdateAsync_WithInvalidId_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var updatedToDont = new ToDont { Title = "Updated Title", IsActive = false };
@@ -192,8 +176,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task UpdateAsync_WithWrongUserId_ShouldReturnNull()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -214,8 +198,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task DeleteAsync_WithValidData_ShouldDeleteToDont()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -240,8 +224,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task DeleteAsync_WithInvalidId_ShouldReturnFalse()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var result = await service.DeleteAsync(999, user.Id);
@@ -252,8 +236,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task DeleteAsync_WithWrongUserId_ShouldReturnFalse()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -272,8 +256,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task ToggleActiveAsync_WithValidData_ShouldToggleIsActive()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
@@ -309,8 +293,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task ToggleActiveAsync_WithInvalidId_ShouldReturnFalse()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var result = await service.ToggleActiveAsync(999, user.Id);
@@ -321,8 +305,8 @@ public class ToDontServiceTest
     [Fact]
     public async Task ToggleActiveAsync_WithWrongUserId_ShouldReturnFalse()
     {
-        using var context = CreateInMemoryContext();
-        var user = await CreateTestUserAsync(context);
+        using var context = _fixture.CreateContext();
+        var user = await _fixture.CreateTestUserAsync(context);
         var service = new ToDontService(context);
 
         var toDont = new ToDont
